@@ -3,7 +3,7 @@ Collection of bash scripts.
 
 ## Scripts
 
-- [ffind.sh](ffind/README.md) : Find files and directories in local and remote files (via ssh) with a single instruction.
+- [ffind.sh](ffind/) : Find files and directories in local and remote files (via ssh) with a single instruction.
 
 ## Install
 ```
