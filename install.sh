@@ -2,7 +2,7 @@
 
 source ./config.sh
 
-SCRIPTS=( "ffind/src/ffind.sh" )
+SCRIPTS=( "ffind/src/ffind.sh" "kodi/kodi-get-not-added.sh" "kodi/kodi-update-clean.sh")
 
 if [ -d "$PATH_TO_INSTALL" ]; then
 	echo "$PATH_TO_INSTALL found."
