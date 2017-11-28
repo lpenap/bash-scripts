@@ -5,7 +5,7 @@ Script for sending e-mails at torrent completion (intended to be invoked by tran
 This is intended to be used in a headless environment (or a server) where transmission-daemon is running. Transmission is a good candidate for a download server, you can add torrents via web admin (or transmission-remote), then you can use this script to notify you via e-mail.
 
 ## Install and Usage
-Install this script using the global [install instructions](https://github.com/lpenap/bash-scripts/tree/master/transmission).
+Install this script using the global [install instructions](https://github.com/lpenap/bash-scripts).
 Stop your running transmission-daemon service:
 ```
 sudo service transmission-daemon stop
