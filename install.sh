@@ -2,7 +2,12 @@
 
 source ./config.sh
 
-SCRIPTS=( "ffind/src/ffind.sh" "kodi/kodi-get-not-added.sh" "kodi/kodi-update-clean.sh")
+SCRIPTS=( 
+	"ffind/src/ffind.sh"
+	"kodi/kodi-get-not-added.sh"
+	"kodi/kodi-update-clean.sh"
+	"transmission/torrent-done.sh"
+	)
 
 if [ -d "$PATH_TO_INSTALL" ]; then
 	echo "$PATH_TO_INSTALL found."
