@@ -4,6 +4,7 @@ Collection of bash scripts.
 ## Scripts
 
 - [ffind.sh](ffind/) : Find files and directories in local and remote files (via ssh) with a single instruction.
+- [torrent-done.sh](transmission/) : Script to be executed by transmission when a torrent is completed. Sends an e-mail with the torrent info.
 
 ## Install
 ```
