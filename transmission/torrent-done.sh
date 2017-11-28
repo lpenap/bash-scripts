@@ -6,7 +6,12 @@
 # If you are using the provided install script, you can type:
 # echo 'export TO_EMAIL="your@email.com"' > ~/bin/torrent-done.prefs
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "$DIR/torrent-done.prefs"
+MAIL="mail"
 
-echo "Torrent done: $TR_TORRENT_NAME" | mail -s "[torrent-done] $TR_TORRENT_NAME" $TO_EMAIL
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PREFS_FILE="$DIR/torrent-done.prefs"
+if [ -f $PREFS_FILE ]; then
+  source $PREFS_FILE
+fi
+
+echo "Torrent done: $TR_TORRENT_NAME" | $MAIL -s "[torrent-done] $TR_TORRENT_NAME" $TO_EMAIL
