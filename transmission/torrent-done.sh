@@ -9,6 +9,9 @@
 MAIL="mail"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "$DIR/torrent-done.prefs"
+PREFS_FILE="$DIR/torrent-done.prefs"
+if [ -f $PREFS_FILE ]; then
+  source $PREFS_FILE
+fi
 
 echo "Torrent done: $TR_TORRENT_NAME" | $MAIL -s "[torrent-done] $TR_TORRENT_NAME" $TO_EMAIL
