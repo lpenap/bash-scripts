@@ -1,0 +1,37 @@
+######################################################################
+# ffinder v1.1 by Luis Augusto Peña Pereira                          #
+# https://github.com/lpenap/bash-scripts                             #
+#                                                                    #
+#          File finder for remote (via ssh) and local folders.       #
+#          Default behaviour: search on current folder only.         #
+#          Will search for filenames containing ALL search arguments.#
+#          filenames are treated as no case sensitive.               #
+######################################################################
+
+### Please modify and rename this file to
+### .ffind-custom.config
+### And place it in the same folder as your ffind script
+
+### Remote directories
+### Please add an entry for each remote folder you want to check via ssh
+### Use the user@serverAddress as key on each entry in this array
+### and place a valid folder as the array values.
+### You can add several entries for different folders in the same server.
+### Tip: Use password-less keys to authenticate to your remote servers
+###      via ssh to speed up search routines.
+###
+### Example:
+REMOTES_ARRAY['user@192.168.1.120']='/mediacenter/videos'
+REMOTES_ARRAY['user@192.168.1.120']='/music/'
+REMOTES_ARRAY['user@192.168.1.125']='/mnt/downloads'
+
+### Local directories
+### The array key should be the actual folder and the value
+### should be the maxdepth parameter to the find command.
+### A negative maxdepth value will search the entire folder tree.
+### Current folder is added as default.
+
+# Search just the files in downloads:
+LOCAL_ARRAY['/home/user/downloads/']='1'
+# Search the entire user2 folder tree:
+LOCAL_ARRAY['/home/user2/']='-1'

@@ -1,0 +1,127 @@
+#!/bin/bash
+
+######################################################################
+# ffinder v1.1 by Luis Augusto Peña Pereira                          #
+# https://github.com/lpenap/bash-scripts                             #
+#                                                                    #
+#          File finder for remote (via ssh) and local folders.       #
+#          Default behaviour: search on current folder only.         #
+#          Will search for filenames containing ALL search arguments.#
+#          filenames are treated as no case sensitive.               #
+######################################################################
+
+# Config ###########################################################
+
+### This configuration file should be placed in the same folder as your
+### ffind script.
+### ffind will echo a warning if the config is not present and will search
+### in the current local folder only.
+### Check ffind-custom.config-example or github page for more information.
+
+USER_CONFIG='.ffind-custom.config'
+
+### Commands and arguments
+### If you use linux locally and on the servers, leave these
+### parameters as is.
+SSH=ssh
+FIND=find
+MAXDEPTH_ARG=-maxdepth
+NAME_ARG=-iname
+AND_ARG=-a
+FOLLOW_SYMLINKS=-L
+
+### Change this to true if you want to see the command being executed
+### each time.
+DEBUG=false
+
+# End of Config #####################################################
+
+# Functions #########################################################
+
+function evalCommand {
+	if [ $DEBUG = true ]; then
+		echo
+		echo "  Executing: $1"
+		echo "  Search results:"
+	fi
+	eval ${1}
+}
+
+function processRemoteFolder {
+	server=$1
+	folder=$2
+	maxdepth=$3
+	findArgs=$4
+	if [ $maxdepth -eq '-1' ]; then
+		COMMAND="$SSH $server \"$FIND $FOLLOW_SYMLINKS $folder $findArgs\""
+	else
+		COMMAND="$SSH $server \"$FIND $FOLLOW_SYMLINKS $folder $MAXDEPTH_ARG $maxdepth $findArgs\""
+	fi
+	evalCommand "$COMMAND"
+}
+
+function processLocalFolder {
+	folder=$1
+	maxdepth=$2
+	findArgs=$3
+
+	if [ $maxdepth -eq '-1' ]; then
+		COMMAND="$FIND $folder $findArgs"
+	else
+		COMMAND="$FIND $FOLLOW_SYMLINKS $folder $MAXDEPTH_ARG $maxdepth $findArgs"
+	fi
+	evalCommand "$COMMAND"
+}
+
+function configNotFound {
+	script=$1
+	echo "Configuration file not found."
+	echo "Please check $script for information on how to create your config file."
+	echo "Searching in current folder only."
+}
+
+# Script Body #######################################################
+
+declare -A REMOTES_ARRAY
+declare -A LOCAL_ARRAY
+LOCAL_ARRAY['.']='-1'
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CONFIG_FILE="$DIR/$USER_CONFIG"
+if [ ! -f $CONFIG_FILE ]; then
+  configNotFound ${BASH_SOURCE[0]}
+else
+	source $CONFIG_FILE
+fi
+
+if [ $# -lt 1 ]; then
+	echo "Search string required."
+	exit 1
+fi
+
+# Build -name string array for find command
+findArgs="\("
+first=true
+for arg in $@; do
+	if [ $first = true ]; then
+		findArgs="$findArgs $NAME_ARG '*$arg*'"
+		first=false
+	else
+		findArgs="$findArgs $AND_ARG $NAME_ARG '*$arg*'"
+	fi
+done
+findArgs="$findArgs \)"
+
+# Cycle through remote directories
+server=""
+folder=""
+for i in ${!REMOTES_ARRAY[@]}; do
+		server="${i}"
+		folder="${REMOTES_ARRAY[$i]}"
+		processRemoteFolder $server $folder '-1' "$findArgs"
+done
+
+# Cycle through local directories
+for i in ${!LOCAL_ARRAY[@]}; do
+	processLocalFolder $i ${LOCAL_ARRAY[$i]} "$findArgs"
+done

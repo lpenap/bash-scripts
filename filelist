@@ -1,0 +1,9 @@
+# file list to be installed
+
+SCRIPTS=(
+	"ffind/ffind"
+	"ffind/ffind-custom.config-example"
+	"kodi/kodi-get-not-added"
+	"kodi/kodi-update-clean"
+	"transmission/torrent-done"
+)

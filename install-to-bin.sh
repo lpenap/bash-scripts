@@ -1,13 +1,8 @@
 #!/bin/bash
 
-source ./config.sh
+PATH_TO_INSTALL="$HOME/bin"
 
-SCRIPTS=( 
-	"ffind/src/ffind.sh"
-	"kodi/kodi-get-not-added.sh"
-	"kodi/kodi-update-clean.sh"
-	"transmission/torrent-done.sh"
-	)
+source "filelist"
 
 if [ -d "$PATH_TO_INSTALL" ]; then
 	echo "$PATH_TO_INSTALL found."
@@ -27,5 +22,3 @@ echo "export PATH=\"$HOME/bin:$PATH\"" >> "$HOME/.bashrc"
 echo "Done."
 
 source "$HOME/.bashrc"
-
-
