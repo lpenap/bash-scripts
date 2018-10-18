@@ -1,5 +1,6 @@
+#!/bin/bash 
 PUBLIC_IP_PRIMARY="$(dig TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'"' '{ print $2}')"
 PUBLIC_IP_SECONDARY="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 #echo ${PUBLIC_IP_PRIMARY}
 #echo ${PUBLIC_IP_SECONDARY}
-printf "To: <username>@gmail.com\nFrom: RPI Server\nSubject: IP Address\n\nIP Address: ${PUBLIC_IP_PRIMARY}\n(Alternative source: ${PUBLIC_IP_SECONDARY})\n" | ssmtp -t
+printf "To: USERNAME@gmail.com\nFrom: RPI CCS Server\nSubject: IP Address\n\nInterface: ${IFACE}\nIP Address: ${PUBLIC_IP_PRIMARY}\n(Alternative source: ${PUBLIC_IP_SECONDARY})\n" | ssmtp -t
