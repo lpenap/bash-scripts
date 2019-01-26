@@ -1,6 +1,12 @@
 #!/bin/bash 
-PUBLIC_IP_PRIMARY="$(dig TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'"' '{ print $2}')"
-PUBLIC_IP_SECONDARY="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+if [ $# -eq 0 ]; then
+  echo "No email address supplied"
+  exit 1
+fi
+export PUBLIC_IP_PRIMARY="$(dig TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'"' '{ print $2}')"
+export PUBLIC_IP_SECONDARY="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 #echo ${PUBLIC_IP_PRIMARY}
 #echo ${PUBLIC_IP_SECONDARY}
-printf "To: USERNAME@gmail.com\nFrom: RPI CCS Server\nSubject: IP Address\n\nInterface: ${IFACE}\nIP Address: ${PUBLIC_IP_PRIMARY}\n(Alternative source: ${PUBLIC_IP_SECONDARY})\n" | ssmtp -t
+printf "Interface: ${IFACE}\nIP Address: ${PUBLIC_IP_PRIMARY}\n(Alternative source: ${PUBLIC_IP_SECONDARY})\n" | mail -s "IP Address" $1
+
+exit 0
