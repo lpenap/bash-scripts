@@ -1,0 +1,44 @@
+#!/bin/bash 
+
+if [ $# -eq 0 ]; then
+  echo "No email address supplied"
+  exit 1
+fi
+
+EMAIL_ADDRESS="$1"
+IP_FILE_1="/home/pi/ip_file_1.txt"
+
+send_email() {
+	printf "$3" | mail -s "$2" $1
+}
+
+send_resolver_alert() {
+	send_email "$EMAIL_ADDRESS" "[CCS] IP Resolver Failed!, action required!" "There is a conflict from the two ip resolvers:\nprimary: $1\nsecondary: $2"
+}
+
+send_status_report() {
+	send_email "$EMAIL_ADDRESS" "[CCS] Ip Address changed!" "New IP Address:\n$1\n\nCamera: http://$1:8080/"
+}
+
+check_ip() {
+	export PUBLIC_IP_1="$(dig TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'"' '{ print $2}')"
+	export PUBLIC_IP_2="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+
+	if [ "$PUBLIC_IP_1" == "$PUBLIC_IP_2" ]; then
+		line=$(head -n 1 $IP_FILE_1)
+		if [ "$line" == "$PUBLIC_IP_1" ]; then
+			echo "Ip Address didn't change..."
+		else
+			echo "Address changed!, sending report..."
+			echo "${PUBLIC_IP_1}" > $IP_FILE_1
+			send_status_report $PUBLIC_IP_1
+		fi
+	else
+		echo "IP Resolver conflict!, sending email requiring action..."
+		send_resolver_alert $PUBLIC_IP_1 $PUBLIC_IP_2
+	fi
+}
+
+check_ip
+echo "Done"
+exit 0
